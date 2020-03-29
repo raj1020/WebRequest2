@@ -8,6 +8,9 @@ namespace WebRequest2
     class Program
     {
         private static string baseCode;
+        private static string secondCode;
+        private static DateTime startDate;
+        private static DateTime endDate;
 
         static void Main(string[] args)
         {
@@ -83,6 +86,50 @@ namespace WebRequest2
             return baseCurrency = Console.ReadLine();
         }
 
+        public static string SecondCode()
+        {
+            Console.WriteLine("Please enter the code of your another currency.");
+            string secondCurrency;
+            return secondCurrency = Console.ReadLine();
+        }
+
+        public static  string StartDate()
+        {
+            DateTime dob;
+
+            // print out instruction to user
+            Console.WriteLine("Please enter student date of birth by yyyy-mm-dd:");
+
+            // get user input
+            var userInputDOB = Console.ReadLine();
+
+            // try to parse in userinput into variable created above
+            DateTime.TryParse(userInputDOB, out dob);
+
+            // print out userinput and convert it to string as well as removing the Time portion
+            return dob.ToString("yyyy’-‘MM’-‘dd");
+
+                //(dob.ToString("yyyy/MM/dd"));
+
+        }
+        public static string  EndDate()
+        {
+
+            // print out instruction to user
+            Console.WriteLine("Please enter end date of birth by yyyy-mm-dd:");
+
+            // get user input
+            var endDateDOB = Console.ReadLine();
+
+            // try to parse in userinput into variable created above
+            DateTime.TryParse(endDateDOB, out endDate);
+
+            // print out userinput and convert it to string as well as removing the Time portion
+            string interimDate= endDate.ToString("yyyy’-‘MM’-‘dd"); 
+            return endDate = DateTime.TryParse(interimDate, out endDate);
+
+        }
+
         public static void Option1()
         {
             CodeQuestion();
@@ -115,10 +162,12 @@ namespace WebRequest2
         {
             CodeQuestion();
             baseCode = EnterCode();
+            secondCode = SecondCode();
+            startDate = StartDate();
+            endDate = EndDate();
 
             WebRequest request = WebRequest.Create(
-            "https://api.exchangeratesapi.io/history?start_at=2018-01-01&end_at=2018-09-01&symbols=ILS,JPY" +
-            baseCode);
+            "https://api.exchangeratesapi.io/history?start_at=" + startDate+"&end_at="+endDate+"&symbols="+baseCode+","+secondCode);
             // Get the response.  
             WebResponse response = request.GetResponse();
             // Display the status.  
