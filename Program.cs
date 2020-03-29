@@ -36,8 +36,8 @@ namespace WebRequest2
                 switch (OptionResponse1())
                 {
                     case 1:
-                        //Option1();
-                        Console.WriteLine("Option 1");
+                        Option1();
+                        //Console.WriteLine("Option 1");
                         i = 4;
                         break;
                     case 2:
@@ -57,9 +57,15 @@ namespace WebRequest2
                         break;
 
                     default:
-                        Console.WriteLine("Invalid Choice");
+                        Console.WriteLine("Invalid Choice.");
                         i++;
                         break;
+                }
+
+                if ( i == 4)
+                {
+                    Console.WriteLine("Please try again later.");
+                    System.Environment.Exit(0);
                 }
             }
 
@@ -72,9 +78,15 @@ namespace WebRequest2
 
         }
 
+        public static void Option1()
+        {
+            Console.WriteLine("Here is your Option 1");
+        }
+
 
         public static int OptionResponse1()
         {
+            Console.WriteLine("Please type your option.");
             int optionResponse2;
             return  optionResponse2 = Convert.ToInt32(Console.ReadLine());
         }
