@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 
 namespace WebRequest2
 {
     class Program
     {
+        private static string baseCode;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello and Welcome.");
@@ -37,22 +40,22 @@ namespace WebRequest2
                 {
                     case 1:
                         Option1();
-                        //Console.WriteLine("Option 1");
                         i = 4;
+                        //i has been assigned a value to 4 so that the program exits the while loop.
                         break;
                     case 2:
-                        //Option2();
-                        Console.WriteLine("Option 2");
+                        Option2();
+                        
                         i = 4;
                         break;
                     case 3:
-                        //Option3();
-                        Console.WriteLine("Option 3");
+                        Option3();
+                        
                         i = 4;
                         break;
                     case 4:
-                        //Option4();
-                        Console.WriteLine("Option 4");
+                        Option4();
+                       
                         i = 4;
                         break;
 
@@ -69,18 +72,80 @@ namespace WebRequest2
                 }
             }
 
-            CodeQuestion();
-
-
-            
+        }
 
 
 
+        public static string EnterCode()
+        {
+            Console.WriteLine("Please enter the code of your base currency.");
+            string baseCurrency;
+            return baseCurrency = Console.ReadLine();
         }
 
         public static void Option1()
         {
-            Console.WriteLine("Here is your Option 1");
+            CodeQuestion();
+            baseCode = EnterCode();
+
+            WebRequest request = WebRequest.Create(
+            "https://api.exchangeratesapi.io/latest?base=" + 
+            baseCode);
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+            // Get the stream containing content returned by the server. 
+            // The using block ensures the stream is automatically closed. 
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                // Open the stream using a StreamReader for easy access.  
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.  
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.  
+                Console.WriteLine(responseFromServer);
+            }
+
+            // Close the response.  
+            response.Close();
+        }
+        public static void Option2()
+        {
+            CodeQuestion();
+            baseCode = EnterCode();
+
+            WebRequest request = WebRequest.Create(
+            "https://api.exchangeratesapi.io/history?start_at=2018-01-01&end_at=2018-09-01&symbols=ILS,JPY" +
+            baseCode);
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+            // Get the stream containing content returned by the server. 
+            // The using block ensures the stream is automatically closed. 
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                // Open the stream using a StreamReader for easy access.  
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.  
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.  
+                Console.WriteLine(responseFromServer);
+            }
+
+            // Close the response.  
+            response.Close();
+        }
+        public static void Option3()
+        {
+            Console.WriteLine("Here is your Option 3");
+        }
+        public static void Option4()
+        {
+            Console.WriteLine("Here is your Option 4");
         }
 
 
@@ -91,7 +156,7 @@ namespace WebRequest2
             return  optionResponse2 = Convert.ToInt32(Console.ReadLine());
         }
 
-        public static void CodeQuestion()
+        public static void  CodeQuestion()
         {
             Console.WriteLine("Do you know the currency code for your base currency? Type 'Y' for yes and 'N' for no.");
             string response = Console.ReadLine();
@@ -100,9 +165,6 @@ namespace WebRequest2
             {
                 CurrencyCodes();
             }
-
-            Console.WriteLine("Please enter the currency code of your base currency.");
-            string baseCurrency = Console.ReadLine();
 
         }  
 
@@ -121,7 +183,7 @@ namespace WebRequest2
             }
         }
 
-            public static void InformationOption()
+           /* public static void InformationOption()
         {
             string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
             string filename = "InfoOpt.txt";
@@ -135,5 +197,15 @@ namespace WebRequest2
                 Console.WriteLine(line);
             }
         }
+        */
     }
 }
+
+
+
+
+
+
+
+
+
