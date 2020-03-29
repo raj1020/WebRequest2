@@ -26,11 +26,45 @@ namespace WebRequest2
                 Console.WriteLine("{0}: {1}", kvp.Key, kvp.Value);
             }
 
+            //int optionResponse = OptionResponse1();
+            int i = 0;
+            while (i<=3)
+            {
 
+            
 
+                switch (OptionResponse1())
+                {
+                    case 1:
+                        //Option1();
+                        Console.WriteLine("Option 1");
+                        i = 4;
+                        break;
+                    case 2:
+                        //Option2();
+                        Console.WriteLine("Option 2");
+                        i = 4;
+                        break;
+                    case 3:
+                        //Option3();
+                        Console.WriteLine("Option 3");
+                        i = 4;
+                        break;
+                    case 4:
+                        //Option4();
+                        Console.WriteLine("Option 4");
+                        i = 4;
+                        break;
 
+                    default:
+                        Console.WriteLine("Invalid Choice");
+                        i++;
+                        break;
+                }
+            }
 
-            LatestExchangeRates();
+            CodeQuestion();
+
 
             
 
@@ -38,12 +72,19 @@ namespace WebRequest2
 
         }
 
-        public static void LatestExchangeRates()
+
+        public static int OptionResponse1()
+        {
+            int optionResponse2;
+            return  optionResponse2 = Convert.ToInt32(Console.ReadLine());
+        }
+
+        public static void CodeQuestion()
         {
             Console.WriteLine("Do you know the currency code for your base currency? Type 'Y' for yes and 'N' for no.");
             string response = Console.ReadLine();
 
-            if (response.ToLower()=="n")
+            if (response.ToLower() == "n")
             {
                 CurrencyCodes();
             }
@@ -51,10 +92,7 @@ namespace WebRequest2
             Console.WriteLine("Please enter the currency code of your base currency.");
             string baseCurrency = Console.ReadLine();
 
-            Console.WriteLine("Please select the option about the information you want to view.");
-
-
-        }
+        }  
 
         public static void CurrencyCodes()
         {
@@ -71,7 +109,7 @@ namespace WebRequest2
             }
         }
 
-        public static void InformationOption()
+            public static void InformationOption()
         {
             string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
             string filename = "InfoOpt.txt";
