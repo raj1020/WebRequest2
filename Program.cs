@@ -9,8 +9,8 @@ namespace WebRequest2
     {
         private static string baseCode;
         private static string secondCode;
-        private static DateTime startDate;
-        private static DateTime endDate;
+        //private static DateTime startDate;
+        //private static DateTime endDate;
 
         static void Main(string[] args)
         {
@@ -20,10 +20,10 @@ namespace WebRequest2
 
             Dictionary<int, string> optionList = new Dictionary<int, string>()
             {
-                { 1, "Get the latest foreign exchange rates." },
-                { 2, "Get the historical foreign exchange rates." },
-                { 3, "Get the latest exchange rates between any two currencies." },
-                { 4, "Get the historical exchange rates between any two currencies." }
+                { 1, "Get the latest foreign exchange rates against a base currency." },
+                { 2, "Get the historical foreign exchange rates of two currencies against Euro." },
+                { 3, "Get the latest exchange rates of two currencies against Euro." },
+                { 4, "Get the historical exchange rates between Euro and a currency of your choice." }
         };
 
             foreach (KeyValuePair<int, string> kvp in optionList)
@@ -43,23 +43,23 @@ namespace WebRequest2
                 {
                     case 1:
                         Option1();
-                        i = 4;
+                        i = 5;
                         //i has been assigned a value to 4 so that the program exits the while loop.
                         break;
                     case 2:
                         Option2();
                         
-                        i = 4;
+                        i = 5;
                         break;
                     case 3:
                         Option3();
                         
-                        i = 4;
+                        i = 5;
                         break;
                     case 4:
                         Option4();
                        
-                        i = 4;
+                        i = 5;
                         break;
 
                     default:
@@ -74,14 +74,19 @@ namespace WebRequest2
                     System.Environment.Exit(0);
                 }
             }
-
+            Console.WriteLine("Do you want to read the opinions of past contributors or contribute with your opinion. Please type 'y' for yes and 'n' for no.");
+            string opinion = Console.ReadLine();
+            if (opinion.ToLower()== "y")
+            {
+                Opinion();
+            }
         }
 
 
 
         public static string EnterCode()
         {
-            Console.WriteLine("Please enter the code of your base currency.");
+            Console.WriteLine("Please enter the code of your currency.");
             string baseCurrency;
             return baseCurrency = Console.ReadLine();
         }
@@ -93,46 +98,12 @@ namespace WebRequest2
             return secondCurrency = Console.ReadLine();
         }
 
-        public static  string StartDate()
-        {
-            DateTime dob;
-
-            // print out instruction to user
-            Console.WriteLine("Please enter student date of birth by yyyy-mm-dd:");
-
-            // get user input
-            var userInputDOB = Console.ReadLine();
-
-            // try to parse in userinput into variable created above
-            DateTime.TryParse(userInputDOB, out dob);
-
-            // print out userinput and convert it to string as well as removing the Time portion
-            return dob.ToString("yyyy’-‘MM’-‘dd");
-
-                //(dob.ToString("yyyy/MM/dd"));
-
-        }
-        public static string  EndDate()
-        {
-
-            // print out instruction to user
-            Console.WriteLine("Please enter end date of birth by yyyy-mm-dd:");
-
-            // get user input
-            var endDateDOB = Console.ReadLine();
-
-            // try to parse in userinput into variable created above
-            DateTime.TryParse(endDateDOB, out endDate);
-
-            // print out userinput and convert it to string as well as removing the Time portion
-            string interimDate= endDate.ToString("yyyy’-‘MM’-‘dd"); 
-            return endDate = DateTime.TryParse(interimDate, out endDate);
-
-        }
+       
+            
 
         public static void Option1()
         {
-            CodeQuestion();
+            CodeList();
             baseCode = EnterCode();
 
             WebRequest request = WebRequest.Create(
@@ -160,14 +131,13 @@ namespace WebRequest2
         }
         public static void Option2()
         {
-            CodeQuestion();
+            CodeList();
             baseCode = EnterCode();
             secondCode = SecondCode();
-            startDate = StartDate();
-            endDate = EndDate();
+           
 
             WebRequest request = WebRequest.Create(
-            "https://api.exchangeratesapi.io/history?start_at=" + startDate+"&end_at="+endDate+"&symbols="+baseCode+","+secondCode);
+            "https://api.exchangeratesapi.io/history?start_at=2020-03-20&end_at=2020-03-30&symbols="+baseCode+","+secondCode);
             // Get the response.  
             WebResponse response = request.GetResponse();
             // Display the status.  
@@ -190,11 +160,66 @@ namespace WebRequest2
         }
         public static void Option3()
         {
-            Console.WriteLine("Here is your Option 3");
+
+
+            CodeList();
+            baseCode = EnterCode();
+            secondCode = SecondCode();
+            
+
+            WebRequest request = WebRequest.Create(
+            " https://api.exchangeratesapi.io/latest?symbols=" + baseCode + "," + secondCode);
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+            // Get the stream containing content returned by the server. 
+            // The using block ensures the stream is automatically closed. 
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                // Open the stream using a StreamReader for easy access.  
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.  
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.  
+                Console.WriteLine(responseFromServer);
+            }
+
+            // Close the response.  
+            response.Close();
         }
         public static void Option4()
         {
-            Console.WriteLine("Here is your Option 4");
+        
+
+            CodeList();
+            baseCode = EnterCode();
+           
+
+
+            WebRequest request = WebRequest.Create(
+            "  https://api.exchangeratesapi.io/history?start_at=2020-03-20&end_at=2020-03-30&base=" + baseCode);
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+            // Get the stream containing content returned by the server. 
+            // The using block ensures the stream is automatically closed. 
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                // Open the stream using a StreamReader for easy access.  
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.  
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.  
+                Console.WriteLine(responseFromServer);
+            }
+
+            // Close the response.  
+            response.Close();
+
         }
 
 
@@ -205,15 +230,12 @@ namespace WebRequest2
             return  optionResponse2 = Convert.ToInt32(Console.ReadLine());
         }
 
-        public static void  CodeQuestion()
+        public static void  CodeList()
         {
-            Console.WriteLine("Do you know the currency code for your base currency? Type 'Y' for yes and 'N' for no.");
-            string response = Console.ReadLine();
-
-            if (response.ToLower() == "n")
-            {
+            Console.WriteLine("Please choose the currency code as shown below.");
+            
                 CurrencyCodes();
-            }
+            
 
         }  
 
@@ -232,12 +254,15 @@ namespace WebRequest2
             }
         }
 
-           /* public static void InformationOption()
+            public static void Opinion()
         {
+           
+
             string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
-            string filename = "InfoOpt.txt";
+            string filename = "Opinion.txt";
             string fullFilePath = docPath + filename;
 
+           
 
 
             string[] fileContentsByLine = File.ReadAllLines(fullFilePath);
@@ -245,8 +270,27 @@ namespace WebRequest2
             {
                 Console.WriteLine(line);
             }
+
+            Console.WriteLine("Based on the information you have do you want to provide an opinion how the currencies will be performing against eachother in the near future. Please type 'y' for yes and 'n' for no.");
+            string opinionInput = Console.ReadLine();
+            if (opinionInput.ToLower() == "y")
+            {
+                Console.WriteLine("Please Type your name.");
+                string name = Console.ReadLine();
+                Console.WriteLine("Please type the topic of your opinion.");
+                string topic = Console.ReadLine();
+                Console.WriteLine("Please type your opinion in a concise manner.");
+                string yourOpinion = Console.ReadLine();
+                string datetime = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+                string text = name + " wrote about " +topic + " on " + datetime;
+
+                File.AppendAllLines(fullFilePath, new string[] { text });
+                File.AppendAllLines(fullFilePath, new string[] { yourOpinion });
+            }
+
+
         }
-        */
+        
     }
 }
 
